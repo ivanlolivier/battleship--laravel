@@ -11,6 +11,20 @@
 |
 */
 
+use App\Http\Controllers\GameController;
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/games/{id}', GameController::class . '@board');
+
+Route::post('/games/{id}/ships', [
+    'as'   => 'addShip',
+    'uses' => GameController::class . '@addShip'
+]);
+
+Route::post('/games/{id}/shot', [
+    'as'   => 'shot',
+    'uses' => GameController::class . '@shot'
+]);
