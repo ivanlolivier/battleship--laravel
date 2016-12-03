@@ -21,16 +21,19 @@ class GameController extends Controller
         }
 
         $board = $request->session()->get('Board' . $user_id, new Board());
-//        $board = new Board();
-//        session(['Board' . $user_id => $board]);
 
         return view('board.show', compact('board', 'user_id'));
     }
 
     public function restart(Request $request)
     {
-        $request->session()->forget('Board 1');
-        $request->session()->forget('Board 2');
+//        $board1 = new Board();
+//        session(['Board1' => $board1]);
+        $request->session()->forget('Board1');
+
+//        $board2 = new Board();
+//        session(['Board2' => $board2]);
+        $request->session()->forget('Board2');
 
         return redirect('/');
     }
@@ -58,15 +61,16 @@ class GameController extends Controller
 
     public function shot($user_id, ShotRequest $request)
     {
+        /** @var Board $board */
         $board = $request->session()->get('Board' . $user_id, new Board());
 
         $result = $board->shot($request->get('row'), $request->get('col'));
 
-        $message = 'miss';
-        if ($result == 0) {
-            $message = "hit";
-        } elseif ($result == 1) {
-            $message = "You sank my battleship!";
+        $message = 'You missed';
+        if ($result == Board::RESULT_HIT) {
+            $message = "Yo make a hit";
+        } elseif ($result == Board::RESULT_SUNKEN) {
+            $message = "You sank a ship!";
         }
 
         return response()->json([
