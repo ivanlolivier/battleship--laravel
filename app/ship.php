@@ -30,6 +30,9 @@ class Ship
     public function shot($position)
     {
         $this->hits[] = $position;
+        $this->hits = array_unique($this->hits);
+
+        return $this->sunken();
     }
 
     public function sunken()

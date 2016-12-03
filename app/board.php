@@ -74,12 +74,15 @@ class Board
     public function shot($row, $col)
     {
         if ($ship_in_table = $this->getShipIn($row, $col)) {
+
             $ship = $ship_in_table['ship'];
             $position = $ship_in_table['position'];
 
             $this->table[$row][$col] = self::PLACE_HIT;
 
-            return $ship->shot($position);
+            $sunken = $ship->shot($position);
+
+            return ($sunken) ? self::RESULT_SUNKEN : self::RESULT_HIT;
         }
 
         $this->table[$row][$col] = self::PLACE_MISS;
@@ -93,7 +96,7 @@ class Board
 
     private function getShipIn($row, $col)
     {
-        foreach ($this->ships as $ship_in_table) {
+        foreach ($this->ships as $index => $ship_in_table) {
             $ship = $ship_in_table['ship'];
             $initial_position = $ship_in_table['initial_position'];
             $orientation = $ship_in_table['orientation'];
@@ -104,8 +107,10 @@ class Board
                     ($initial_position['col'] <= $col && $col <= ($initial_position['col'] + $ship->getLength()))
                 ) {
                     return [
-                        'ship'     => $ship,
-                        'position' => $col - $initial_position['col'] + 1,
+                        'index'         => $index,
+                        'ship'          => $ship,
+                        'ship_in_table' => $ship_in_table,
+                        'position'      => $col - $initial_position['col'] + 1,
                     ];
                 }
             }
