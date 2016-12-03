@@ -14,13 +14,14 @@ class Board
     CONST RESULT_SUNKEN = 'sunken';
 
     CONST PLACE_FREE = 'free';
-    CONST PLACE_OCCUPED = 'occuped';
+    CONST PLACE_MISS = 'miss';
+    CONST PLACE_HIT = 'hit';
 
     CONST ORIENTATION_VERTICAL = 'v';
     CONST ORIENTATION_HORIZONTAL = 'h';
 
-    public $table;
-    public $ships;
+    public $table; //Table to store my shots
+    public $ships; //My ships
     public $available_ships;
 
     public function __construct()
@@ -76,8 +77,12 @@ class Board
             $ship = $ship_in_table['ship'];
             $position = $ship_in_table['position'];
 
+            $this->table[$row][$col] = self::PLACE_HIT;
+
             return $ship->shot($position);
         }
+
+        $this->table[$row][$col] = self::PLACE_MISS;
 
         return self::RESULT_MISS;
     }
@@ -96,7 +101,7 @@ class Board
             if ($orientation == self::ORIENTATION_HORIZONTAL) {
                 if (
                     ($initial_position['row'] == $row) &&
-                    ($initial_position['col'] >= $col && $col >= $initial_position['col'] + $ship->getLength())
+                    ($initial_position['col'] <= $col && $col <= ($initial_position['col'] + $ship->getLength()))
                 ) {
                     return [
                         'ship'     => $ship,

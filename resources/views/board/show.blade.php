@@ -146,9 +146,9 @@
                     this.$http
                             .post('{{ route('shot', ['id' => $user_id]) }}', params)
                             .then(function (response) {
-                                this.message = response.message;
+                                this.message = response.body.message;
 
-                                var imageClass = (response.result == 'miss') ? 'miss' : 'hit';
+                                var imageClass = (response.body.result == 'miss') ? 'miss' : 'hit';
 
                                 $('.map.opponent .col' + col + '.row' + row)
                                         .addClass('boom')

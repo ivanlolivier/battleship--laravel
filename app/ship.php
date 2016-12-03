@@ -7,10 +7,14 @@ class Ship
     public $name;
     public $length;
 
+    protected $hits;
+
     public function __construct($name, $length)
     {
         $this->name = $name;
         $this->length = $length;
+
+        $this->hits = [];
     }
 
     public function getName()
@@ -21,5 +25,15 @@ class Ship
     public function getLength()
     {
         return $this->length;
+    }
+
+    public function shot($position)
+    {
+        $this->hits[] = $position;
+    }
+
+    public function sunken()
+    {
+        return count($this->hits) == $this->length;
     }
 }

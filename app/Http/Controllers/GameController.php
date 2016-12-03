@@ -66,6 +66,8 @@ class GameController extends Controller
 
         $result = $board->shot($request->get('row'), $request->get('col'));
 
+        session(['Board' . $user_id => $board]);
+
         $message = 'You missed';
         if ($result == Board::RESULT_HIT) {
             $message = "Yo make a hit";
